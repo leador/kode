@@ -1,0 +1,9 @@
+{% load cloudinary %}
+<div class="mb-3">
+  <div class="adv-sidebar-section text-center">
+    <a href="{{ advert.redirect_url }}" target="_blank" class="adv">
+          {% cloudinary advert.media aspect_ratio="10:12" crop="fill" class="card-img" alt=advert.company %}
+    </a>
+    <small>Advertisement</small>
+  </div>
+</div>

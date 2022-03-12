@@ -1,0 +1,6 @@
+{% load sidebar %}
+{% for category in categories %}
+  <li>
+    <a href="{{ category.get_absolute_url }}">{{ category.title|capfirst }}</a>
+  </li>
+{% endfor %}

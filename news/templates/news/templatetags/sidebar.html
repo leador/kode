@@ -1,0 +1,18 @@
+{% load sidebar %}
+<div class="mb-3">
+    <div class="sidebar-section">
+    <h5 class="sidebar-title">Categories</h5>
+    <div class="section-separator"></div>
+    {% for category in categories %}
+      <a href="{{ category.get_absolute_url }}" class="category-title">
+      <article class="sidebar-story">
+        <h6 class="sidebar-story-title ml-4">
+          {{ category.title|capfirst }}
+        </h6>
+      </article></a>
+      {% if not forloop.last %}
+        <div class="sidebar-article-separator"></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

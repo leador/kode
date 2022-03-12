@@ -1,0 +1,20 @@
+<div class="mb-3">
+  <div class="sidebar-section">
+    <h5 class="sidebar-title">Recommended</h5>
+    <div class="section-separator"></div>
+    {% load cloudinary %}
+    {% for news in rating_news %}
+      <article class="sidebar-story">
+        <h6 class="sidebar-story-title">
+          <a href="{{ news.get_absolute_url }}">{{ news.title|truncatechars:60 }}</a>
+        </h6>
+        <a href="{{ news.get_absolute_url }}">
+          {% cloudinary news.poster width=64 height=64 crop="fill" class="img-rounded" alt=news.title %}
+        </a>
+      </article>
+      {% if not forloop.last %}
+        <div class="sidebar-article-separator"></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

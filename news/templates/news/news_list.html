@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load sidebar %}
+{% load news_rating %}
+
+{% block title %}
+  {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    {% load cloudinary %}
+  <div class="col-md-12 jumbotron-post">
+    <div class="text-white img-hover-zoom img-rounded">
+            {% cloudinary last_new.poster aspect_ratio="125:46" crop="fill" class="card-img" alt=last_new.title %}
+      <div class="card-img-overlay-2">
+        <a href="{{ last_new.get_absolute_url }}">
+          <h5 class="jumbotron-news-title font-weight-bold">{{ last_new.title }}</h5>
+        </a>
+        <p class="card-text">{{ last_new.created|date:"N j, Y • H:i" }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 row justify-content-center" style="padding: 0">
+    <div class="col-md-9 row justify-content-center">
+      <div id="news-list" class="row justify-content-center">
+        {% include 'news/list_ajax.html' %}
+      </div>
+      <button class="load-button btn mb-4 btn-outline-primary">DISCOVER MORE</button>
+    </div>
+    <div class="col-md-3">
+      {% news_rate %}
+      <div class="sticky-top">
+        {% include 'inc/_adv_bar.html' %}
+        {% include 'inc/_our_sites.html' %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block domready %}
+  var page = 1;
+  var empty_page = false;
+  var block_request = false;
+  $(".load-button").click(function() {
+  if (empty_page == false && block_request == false) {
+  block_request = true;
+  page += 1;
+  $.get('?page=' + page, function(data) {
+  if (data == '') {
+  empty_page = true;
+  } else {
+  block_request = false;
+  $('#news-list').append(data);
+  }
+  });
+  }
+  });
+
+  // --- HEADER ROW START ---
+  // Hide Header on scroll down
+  var didScroll;
+  var lastScrollTop = 0;
+  var delta = 5;
+  var navbarHeight = 44;
+
+  $(window).scroll(function(event){
+  didScroll = true;
+  });
+
+  setInterval(function() {
+  if (didScroll) {
+  hasScrolled();
+  didScroll = false;
+  }
+  }, 250);
+
+  function hasScrolled() {
+  var st = $(this).scrollTop();
+
+  // Make sure they scroll more than delta
+  if(Math.abs(lastScrollTop - st) <= delta)
+  return;
+
+  // If they scrolled down and are past the navbar, add class .nav-up.
+  // This is necessary so you never see what is "behind" the navbar.
+  if (st > lastScrollTop && st > navbarHeight){
+  // Scroll Down
+  $('#header-row').removeClass('nav-down').addClass('nav-up');
+  } else {
+  // Scroll Up
+  if(st <= 100) {
+  $('#header-row').removeClass('nav-up').addClass('nav-down');
+  }
+  }
+
+  lastScrollTop = st;
+  }
+  // --- HEADER ROW END ---
+{% endblock %}

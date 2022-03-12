@@ -1,0 +1,18 @@
+{% load cloudinary %}
+
+{% for item in news %}
+  <div class="col-md-{% if section == 'home' %}6{% elif section == 'category' %}4{% endif %}">
+    <div class="mb-3">
+      <div class="img-hover-zoom img-rounded">
+        <a href="{{ item.get_absolute_url }}">
+          {% cloudinary item.poster aspect_ratio="5:3" crop="fill" class="card-img-top" alt=item.title %}
+        </a>
+      </div>
+      <div class="news-card-body">
+        <a href="{{ item.get_absolute_url }}"><h5
+            class="news-title card-title font-weight-bold">{{ item.title }}</h5></a>
+        <p class="card-text"><small class="text-muted">{{ item.created|date:"N j, Y • H:i" }}</small></p>
+      </div>
+    </div>
+  </div>
+{% endfor %}

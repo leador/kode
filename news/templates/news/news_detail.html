@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load sidebar %}
+{% load news_rating %}
+
+{% block title %}
+  {{ news_item.title }} | {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+  {% load cloudinary %}
+  <div class="content news-detail-content row">
+    <div class="col-md-9">
+      <div class="col-md-12">
+        <div class="text-white mb-3 img-rounded">
+          {% cloudinary news_item.poster aspect_ratio="128:63" crop="fill" class="card-img" alt=news_item.title %}
+          <div class="card-img-overlay-2">
+            <h5 class="ml-3 news-detail-title jumbotron-news-title font-weight-bold">{{ news_item.title }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="news-detail col-md-10 offset-md-1 justify-content-center">
+        <div class="mb-5 ">
+          <p class="text-muted">Category:
+            <a href="{{ news_item.category.get_absolute_url }}"
+               class="mr-5">{{ news_item.category }}</a>
+            Published: <span>{{ news_item.created|date:"N j, Y • H:i" }}</span>
+          </p>
+          <div class="content-text">
+            <p>{{ news_item.content|safe|linebreaks }}</p>
+          </div>
+          <p class="text-muted">Published: <span>{{ news_item.created|date:"N j, Y • H:i" }}</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      {% news_rate %}
+      <div class="sticky-top">
+        {% include 'inc/_adv_bar.html' %}
+        {% include 'inc/_our_sites.html' %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block domready %}
+    // --- HEADER ROW START ---
+    // Hide Header on scroll down
+  var didScroll;
+  var lastScrollTop = 0;
+  var delta = 5;
+  var navbarHeight = 44;
+
+  $(window).scroll(function(event){
+      didScroll = true;
+  });
+
+  setInterval(function() {
+      if (didScroll) {
+          hasScrolled();
+          didScroll = false;
+      }
+  }, 250);
+
+  function hasScrolled() {
+      var st = $(this).scrollTop();
+
+      // Make sure they scroll more than delta
+      if(Math.abs(lastScrollTop - st) <= delta)
+          return;
+
+      // If they scrolled down and are past the navbar, add class .nav-up.
+      // This is necessary so you never see what is "behind" the navbar.
+      if (st > lastScrollTop && st > navbarHeight){
+          // Scroll Down
+          $('#header-row').removeClass('nav-down').addClass('nav-up');
+      } else {
+          // Scroll Up
+          if(st <= 100) {
+              $('#header-row').removeClass('nav-up').addClass('nav-down');
+          }
+      }
+
+      lastScrollTop = st;
+  }
+      // --- HEADER ROW END ---
+{% endblock %}
